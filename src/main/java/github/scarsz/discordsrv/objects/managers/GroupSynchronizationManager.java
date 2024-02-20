@@ -293,6 +293,13 @@ public class GroupSynchronizationManager extends ListenerAdapter implements List
                     && !discordIsStrictlyAuthoritative
                     && (direction == SyncDirection.AUTHORITATIVE ? DiscordSRV.config().getBoolean("GroupRoleSynchronizationMinecraftIsAuthoritative") : direction == SyncDirection.TO_DISCORD));
 
+            // codercommand: When someone joins, check if they have a discord role. If so then a command is ran to add them to the group related to the role. 
+            if (hasRole)
+            {
+                DiscordSRV.warning(player.getName() + " has joined group: " + groupName + "; roleId: " + roleId);
+                SchedulerUtil.runTask(DiscordSRV.getPlugin(), () -> Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "ge eventteams join " + groupName + " " + player.getName()));
+            }
+
             if (hasGroup == hasRole) {
                 // both sides agree, no changes necessary
                 (hasGroup ? bothSidesTrue : bothSidesFalse).add("{" + groupName + ":" + role + "}" + (roleIsManaged ? " (Managed Role)" : ""));
